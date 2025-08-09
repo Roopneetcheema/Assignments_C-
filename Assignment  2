@@ -121,8 +121,156 @@ int main() {
     return 0;
 }
 
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 4.
 
+a). 
+#include <iostream>
+#include <string>
+using namespace std;
+string concatenate(string s1, string s2){
+    string s3= s1+s2;
+    return s3;
+}
+int main() {
+    string s1,s2;
+   cout << "Enter String 1"<<endl;
+   getline(cin,s1);
+   cout << "Enter String 2"<<endl;
+   getline(cin,s2);
+   cout<<"Concatenated string is : "<< concatenate(s1,s2)<<endl;
+  
+    return 0;
+}
+
+-------------------------------------------------------------------------
+b).
+#include <iostream>
+#include <string>
+using namespace std;
+string reverse(string s){
+    int len=s.length();
+    for(int i=0;i<len/2;i++){
+        char temp=s[i];
+        s[i]= s[len -1-i] ;
+        s[len -1-i] = temp;
+    }
+    return s;
+}
+int main() {
+    string s1,s2;
+   cout << "Enter String "<<endl;
+   getline(cin,s1);
+ 
+   cout<<"Reversed string is : "<< reverse(s1)<<endl;
+  
+    return 0;
+    
+}
+---------------------------------------------------------------------------
+c). 
+#include <iostream>
+#include <string>
+using namespace std;
+
+string del_vowel(string s){
+    int len=s.length();
+    for(int i=0;i<len;i++){
+        if(s[i]=='a'||s[i]=='e'||s[i]=='i'||s[i]=='o'||s[i]=='u'||s[i]=='A'||s[i]=='E'||s[i]=='I'||s[i]=='O'||s[i]=='U'){
+              s.erase(i, 1); 
+           i--;
+        }
+    }
+    return s;
+}
+int main() {
+    string s1,s2;
+   cout << "Enter String "<<endl;
+   getline(cin,s1);
+ 
+   cout<<"String without vowels is : "<< del_vowel(s1)<<endl;
+  
+    return 0;
+    
+}
+
+------------------------------------------------------------------------------------------
+
+d).
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+string sort_s(string s){
+    int len=s.length();
+    for(int j=0;j<len-1;j++){
+    for(int i=0;i<len-1-j;i++){
+       if(s[i]>s[i+1]){
+           char temp= s[i];
+           s[i]=s[i+1];
+           s[i+1]=temp;
+           //cout<<s<<endl;
+       }
+    }
+    }
+    return s;
+}
+int main() {
+    string s1,s2;
+
+   cout << "Enter String "<<endl;
+   getline(cin,s1);
+    cout<<sort_s(s1)<<endl;
+  
+    return 0;
+    
+}
+
+e).
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+char u_to_l(char s){
+    s=s+32;
+    
+    return s;
+}
+int main() {
+  char r;
+   cout << "Enter character "<<endl;
+   cin>>r;
+cout<<u_to_l(r)<<endl;
+  
+    return 0;
+    
+}
+
+------------------------------------------------------------------------------------------------------------
+8.
+
+#include <iostream>
+#include <string>
+using namespace std;
+int distinct(int* arr,int len){
+    int count=0;
+    for(int i=0;i<len;i++){
+    if(arr[i]!=arr[i+1]){
+        count++;
+      
+    }
+    }
+    return count;
+}
+int main() {
+   int arr[]={1,2,2,3,4,4,4,5,5,6,7};
+   int len=11;
+   cout<<distinct(arr,len);
+  return 0;
+    
+}
 
 
