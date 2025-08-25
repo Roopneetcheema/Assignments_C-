@@ -124,7 +124,7 @@ int main() {
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 4.
-
+(a) Write a program to concatenate one string to another string.
 a). 
 #include <iostream>
 #include <string>
@@ -145,6 +145,7 @@ int main() {
 }
 
 -------------------------------------------------------------------------
+(b) Write a program to reverse a string.
 b).
 #include <iostream>
 #include <string>
@@ -169,6 +170,7 @@ int main() {
     
 }
 ---------------------------------------------------------------------------
+(c) Write a program to delete all the vowels from the string.
 c). 
 #include <iostream>
 #include <string>
@@ -197,37 +199,43 @@ int main() {
 
 ------------------------------------------------------------------------------------------
 
-d).
-
+d).(d) Write a program to sort the strings in alphabetical order.
 #include <iostream>
 #include <string>
 using namespace std;
 
-string sort_s(string s){
-    int len=s.length();
-    for(int j=0;j<len-1;j++){
-    for(int i=0;i<len-1-j;i++){
-       if(s[i]>s[i+1]){
-           char temp= s[i];
-           s[i]=s[i+1];
-           s[i+1]=temp;
-           //cout<<s<<endl;
-       }
-    }
-    }
-    return s;
-}
 int main() {
-    string s1,s2;
+    int n;
+    cout << "Enter number of strings: ";
+    cin >> n;
+    cin.ignore(); 
 
-   cout << "Enter String "<<endl;
-   getline(cin,s1);
-    cout<<sort_s(s1)<<endl;
-  
+    string arr[100]; 
+
+    cout << "Enter " << n << " strings:\n";
+    for (int i = 0; i < n; i++) {
+        getline(cin, arr[i]);
+    }
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (arr[i] > arr[j]) {  
+                string temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+
+    cout << "\nStrings in alphabetical order:\n";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << endl;
+    }
+
     return 0;
-    
 }
-
+----------------------------------------------------------------------------------
+(e) Write a program to convert a character from uppercase to lowercase.
 e).
 
 #include <iostream>
@@ -319,3 +327,282 @@ int main(){
 	return 0;
 }       
 
+----------------------------------------------------------------------------------------------------------------------------------------
+5. Space required to store any two-dimensional array is number oƒ rows × number oƒ
+columns. Assuming array is used to store elements of the following matrices,
+implement an efficient way that reduces the space requirement.
+(a) Diagonal Matrix.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout<<"Enter order of matrix :"<<endl;
+    int n;
+    cin>>n;
+    int arr[n];
+    cout<<"Enter diagonal elements of matrix :"<<endl; 
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    cout<<endl<<"Matrix is :"<<endl;
+    int k=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i==j){
+                cout<<arr[k]<<" ";
+                k++;
+            }
+            else cout<<0<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+--------------------------------------------------------------------------------------
+(b) Tri-diagonal Matrix.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout<<"Enter order of matrix :"<<endl;
+    int n;
+    cin>>n;
+    cout<<"Enter diagonal elements of matrix :"<<endl; 
+    int ele= ((3*n )-2);
+     int arr[ele];
+    for(int i=0;i<ele;i++){
+        cin>>arr[i];
+    }
+    cout<<endl<<"Matrix is :"<<endl;
+    int k=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i==j|| i-j ==-1 ||i-j ==1){
+                cout<<arr[k]<<" ";
+                k++;
+            }
+            else cout<<0<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+--------------------------------------------------------------------------------------------
+(c) Lower triangular Matrix.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout<<"Enter order of matrix :"<<endl;
+    int n;
+    cin>>n;
+    cout<<"Enter diagonal elements of matrix :"<<endl; 
+    int ele= ((n*(n+1) )/2);
+     int arr[ele];
+    for(int i=0;i<ele;i++){
+        cin>>arr[i];
+    }
+    cout<<endl<<"Matrix is :"<<endl;
+    int k=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i>=j){
+                cout<<arr[k]<<" ";
+                k++;
+            }
+            else cout<<0<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+--------------------------------------------------------------------------------
+(d) Upper triangular Matrix.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout<<"Enter order of matrix :"<<endl;
+    int n;
+    cin>>n;
+    cout<<"Enter diagonal elements of matrix :"<<endl; 
+    int ele= ((n*(n+1) )/2);
+     int arr[ele];
+    for(int i=0;i<ele;i++){
+        cin>>arr[i];
+    }
+    cout<<endl<<"Matrix is :"<<endl;
+    int k=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i<=j){
+                cout<<arr[k]<<" ";
+                k++;
+            }
+            else cout<<0<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+--------------------------------------------------------------------------------
+(e) Symmetric Matrix
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Enter order of matrix :" << endl;
+    int n;
+    cin >> n;
+
+    cout << "Enter upper triangular elements of matrix :" << endl;
+    int ele = (n * (n + 1)) / 2;
+    int arr[ele];
+
+    for (int i = 0; i < ele; i++) {
+        cin >> arr[i];
+    }
+
+    cout << endl << "Symmetric Matrix is :" << endl;
+    int k = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i <= j) {
+                cout << arr[k] << " ";
+                k++;
+            } else {
+               
+                int index = (j * n) - (j * (j - 1)) / 2 + (i - j);
+                cout << arr[index] << " ";
+            }
+        }
+        cout << endl;  
+    }
+
+    return 0;
+}
+========================================================================================
+6) Write a program to implement the following operations on a Sparse Matrix,
+assuming the matrix is represented using a triplet.
+
+
+(b) Addition of two matrices.
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int find_size(int arr[4][4]) {
+    int size = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (arr[i][j] != 0) {
+                size++;
+            }
+        }
+    }
+    return size;
+}
+
+vector<vector<int>> make_sparse(int arr[4][4], int size) {
+    vector<vector<int>> sparse(size, vector<int>(3));
+    int k = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (arr[i][j] != 0) {
+                sparse[k][0] = i;        // row
+                sparse[k][1] = j;        // col
+                sparse[k][2] = arr[i][j]; // value
+                k++;
+            }
+        }
+    }
+    return sparse;
+}
+
+vector<vector<int>> add(vector<vector<int>> v1, vector<vector<int>> v2) {
+    vector<vector<int>> sum;
+    int i = 0, j = 0;
+
+    while (i < v1.size() && j < v2.size()) {
+        if (v1[i][0] < v2[j][0] || (v1[i][0] == v2[j][0] && v1[i][1] < v2[j][1])) {
+            sum.push_back(v1[i]);
+            i++;
+        }
+        else if (v2[j][0] < v1[i][0] || (v1[i][0] == v2[j][0] && v2[j][1] < v1[i][1])) {
+            sum.push_back(v2[j]);
+            j++;
+        }
+        else { // same position
+            int val = v1[i][2] + v2[j][2];
+            if (val != 0) {
+                sum.push_back({v1[i][0], v1[i][1], val});
+            }
+            i++; j++;
+        }
+    }
+
+    // Add remaining elements
+    while (i < v1.size()) {
+        sum.push_back(v1[i]);
+        i++;
+    }
+    while (j < v2.size()) {
+        sum.push_back(v2[j]);
+        j++;
+    }
+
+    return sum;
+}
+
+int main() {
+    int arr[4][4] = {
+        {1,0,0,0},
+        {2,0,0,3},
+        {0,0,0,4},
+        {0,7,0,0}
+    };
+
+    int arr2[4][4] = {
+        {0,0,5,0},
+        {2,0,0,3},
+        {0,3,0,4},
+        {0,7,0,0}
+    };
+
+    int size1 = find_size(arr);
+    vector<vector<int>> sparse1 = make_sparse(arr, size1);
+
+    int size2 = find_size(arr2);
+    vector<vector<int>> sparse2 = make_sparse(arr2, size2);
+
+    cout << "Sparse Matrix 1:\n";
+    for (int i = 0; i < sparse1.size(); i++) {
+        cout << sparse1[i][0] << " "
+             << sparse1[i][1] << " "
+             << sparse1[i][2] << endl;
+    }
+
+    cout << "\nSparse Matrix 2:\n";
+    for (int i = 0; i < sparse2.size(); i++) {
+        cout << sparse2[i][0] << " "
+             << sparse2[i][1] << " "
+             << sparse2[i][2] << endl;
+    }
+
+    vector<vector<int>> addition = add(sparse1, sparse2);
+
+    cout << "\nSum of Sparse Matrices:\n";
+    for (int i = 0; i < addition.size(); i++) {
+        cout << addition[i][0] << " "
+             << addition[i][1] << " "
+             << addition[i][2] << endl;
+    }
+
+    return 0;
+}
