@@ -1,4 +1,6 @@
-1.
+1. Develop a menu driven program demonstrating the following operations on a Stack using array: 
+(i) 
+push(),  (ii) pop(),  (iii) isEmpty(),  (iv) isFull(),  (v) display(), and  (vi) peek(). 
 
 #include <iostream>
 using namespace std;
@@ -71,6 +73,8 @@ s1.display();
 s1.peek();
 }
 ---------------------------------------------------------------------------------------------------------------------
+2. Given a string, reverse it using STACK. For example “DataStructure” should be output as 
+“erutcurtSataD.” 
 
 2.#include <iostream>
 #include <string>
@@ -148,6 +152,160 @@ while(!s1.isEmpty()){
 cout<<dsr<<endl;
 
 }
+
+
+-------------------------
+using stl stacks
+-------------------------
+
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int main() {
+    stack<char> s1;  
+    string ds = "DataStructure";  
+
+    cout << "Original string: " << ds << endl;
+
+    // Push characters onto stack
+    for (int i = 0; i < ds.length(); i++) {
+        s1.push(ds[i]);
+    }
+
+    // Pop characters to reverse
+    string dsr = "";
+    while (!s1.empty()) {
+        dsr += s1.top();  // take top element
+        s1.pop();         // remove top element
+    }
+
+    cout << "Reversed string: " << dsr << endl;
+
+    return 0;
+}
+
+=----------------------------------------------------------------------------------------------------------------------------------
+3. Write a program that checks if an expression has balanced parentheses.
+
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int main() {
+    stack<char> s1;  
+    string peren = "[{((){})}]";  
+
+    cout << "Parenthesis combination is: " << peren << endl;
+
+    bool balanced = true;
+
+    for (int i = 0; i < peren.length(); i++) {
+        if (peren[i] == '[' || peren[i] == '(' || peren[i] == '{') {
+            s1.push(peren[i]);
+        }
+        else {
+            if (s1.empty()) {  
+                balanced = false;
+                break;
+            }
+            if (peren[i] == ')' && s1.top() == '(') {
+                s1.pop();
+            }
+            else if (peren[i] == '}' && s1.top() == '{') {
+                s1.pop();
+            }
+            else if (peren[i] == ']' && s1.top() == '[') {
+                s1.pop();
+            }
+            else { 
+                balanced = false;
+                break;
+            }
+        }
+    }
+
+    if (balanced && s1.empty()) {
+        cout << "Balanced" << endl;
+    }
+    else {
+        cout << "Not Balanced" << endl;
+    }
+
+    return 0;
+}
+--------------------------------------------------------------------------------------------------------------------------
+4. Write a program to convert an Infix expression into a Postfix expression.
+
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+// precedence function
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+// check if character is operator
+bool isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+int main() {
+    string infix = "a+b-(d*f)+(c/e)";
+    stack<char> s;
+    string postfix = "";
+
+    for (int i = 0; i < infix.length(); i++) {
+        char c = infix[i];
+
+        // If operand → add to output
+        if (isalnum(c)) {
+            postfix += c;
+        }
+        // If '(' → push
+        else if (c == '(') {
+            s.push(c);
+        }
+        // If ')' → pop until '('
+        else if (c == ')') {
+            while (!s.empty() && s.top() != '(') {
+                postfix += s.top();
+                s.pop();
+            }
+            if (!s.empty() && s.top() == '(')
+                s.pop();
+        }
+        // If operator
+        else if (isOperator(c)) {
+            while (!s.empty() && precedence(s.top()) >= precedence(c)) {
+                postfix += s.top();
+                s.pop();
+            }
+            s.push(c);
+        }
+    }
+
+    // Pop remaining operators
+    while (!s.empty()) {
+        postfix += s.top();
+        s.pop();
+    }
+
+    cout << "Infix Expression: " << infix << endl;
+    cout << "Postfix Expression: " << postfix << endl;
+
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+5. Write a program for the evaluation of a Postfix expression. 
 
 
 
