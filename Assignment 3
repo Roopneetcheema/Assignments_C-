@@ -307,6 +307,62 @@ int main() {
 
 5. Write a program for the evaluation of a Postfix expression. 
 
+#include <iostream>
+#include <stack>
+#include <cctype>
+using namespace std;
+
+int main() {
+    cout << "Postfix is : ";
+    string post = "100 200 + 2 / 5 * 7 +";
+    cout << post << endl;
+
+    stack<int> s;
+    int output = 0;
+    int i = 0;
+
+    while (i < post.length()) {
+        if (post[i] == ' ') {
+            i++;
+            continue;
+        }
+
+        if (isdigit(post[i])) {
+            int num = 0;
+            while (isdigit(post[i])) {
+                num = num * 10 + (post[i] - '0');
+                i++;
+            }
+            s.push(num);
+        }
+        else { 
+            int op2 = s.top(); s.pop();
+            int op1 = s.top(); s.pop();
+
+            if (post[i] == '+') output = op1 + op2;
+            else if (post[i] == '-') output = op1 - op2;
+            else if (post[i] == '*') output = op1 * op2;
+            else if (post[i] == '/') output = op1 / op2;
+
+            s.push(output);
+            i++;
+        }
+    }
+
+    cout << "Final Output is : " << s.top() << endl;
+    return 0;
+}
+
+============================================================================================================================
+                                      A D D I T I O N A L     Q U E S T I O N S
+============================================================================================================================
+
+
+1. Given an array A, find the nearest smaller element for every element A[i] in the array such that the 
+element has an index smaller than i. 
+https://www.interviewbit.com/problems/nearest-smaller-element/ 
+
+
 
 
 
