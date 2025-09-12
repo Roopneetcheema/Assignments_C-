@@ -1,1 +1,50 @@
 
+#include <iostream>
+using namespace std;
+class node{
+    public:
+    int data;
+    node* next;
+    node(){
+        data=0;
+        next=nullptr;
+    }
+    node(int val){
+        data=val;
+        next=nullptr;
+    }
+};//
+class linklist{
+    node* head=nullptr;
+    node* temp = head;
+    public:
+    void insert_at_b(int value){
+        node* newnode= new node(value);
+        if(!head) {
+            head = newnode;
+            temp = head;
+        }
+        else{
+        temp->next=newnode;
+        temp=newnode;
+        }
+    }
+    void display(){
+        node* t1 = head;
+        while(t1){
+            cout<<t1->data<<"  ";
+            t1=t1->next;
+        }
+    }
+    
+};
+int main() {
+    
+    linklist l;
+    l.insert_at_b(1);
+    l.insert_at_b(2);
+    l.insert_at_b(3);
+    l.display();
+
+    return 0;
+}
