@@ -137,7 +137,23 @@ public:
 
     delete temp;
  }
-
+ void find_fr( int ele) {
+        
+        if (head == nullptr) {
+            cout << "List is empty\n";
+            return;
+        }
+        int count=0;
+        node* curr = head;
+        while (curr) {
+            if (curr->data == ele) {
+                count++;
+            }
+           
+            curr = curr->next;
+        }
+     cout<<"Element found at total "<<count<<" occurences"<<endl;
+    }
     void display() {
         node* t1 = head;
         while (t1) {
@@ -164,5 +180,11 @@ int main() {
     l.display();
     l.del_at_pos(1);
     l.display();
+    l.insert_at_begin(5);
+    l.insert_at_begin(5);
+    l.insert_at_begin(5);
+    l.insert_at_begin(5);
+    l.display();
+    l.find_fr(5);
     return 0;
 }
