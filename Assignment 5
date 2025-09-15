@@ -1,50 +1,108 @@
+1. Develop a menu driven program for the following operations on a Singly Linked
+List.
+(a) Insertion at the beginning.
+(b) Insertion at the end.
+(c) Insertion in between (before or after a node having a specific value, say 'Insert a
+new Node 35 before/after the Node 30').
+(d) Deletion from the beginning.
+(e) Deletion from the end.
+(f) Deletion of a specific node, say 'Delete Node 60').
+(g) Search for a node and display its position from head.
+(h) Display all the node values.
+
 
 #include <iostream>
 using namespace std;
-class node{
-    public:
+
+class node {
+public:
     int data;
     node* next;
-    node(){
-        data=0;
-        next=nullptr;
+    node(int val = 0) {  // single constructor with default value
+        data = val;
+        next = nullptr;
     }
-    node(int val){
-        data=val;
-        next=nullptr;
-    }
-};//
-class linklist{
-    node* head=nullptr;
-    node* temp = head;
-    public:
-    void insert_at_b(int value){
-        node* newnode= new node(value);
-        if(!head) {
-            head = newnode;
-            temp = head;
-        }
-        else{
-        temp->next=newnode;
-        temp=newnode;
-        }
-    }
-    void display(){
-        node* t1 = head;
-        while(t1){
-            cout<<t1->data<<"  ";
-            t1=t1->next;
-        }
-    }
-    
 };
-int main() {
-    
-    linklist l;
-    l.insert_at_b(1);
-    l.insert_at_b(2);
-    l.insert_at_b(3);
-    l.display();
 
+class linklist {
+    node* head = nullptr;
+    node* temp = nullptr;
+
+public:
+    void insert_at_begin(int value) {
+        node* newnode = new node(value);
+        if (head == nullptr) {
+            head = temp = newnode;
+        } else {
+            newnode->next = head;
+            head = newnode;
+        }
+    }
+
+    void insert_at_end(int value) {
+        node* newnode = new node(value);
+        if (head == nullptr) {
+            head = temp = newnode;
+        } else {
+            temp->next = newnode;
+            temp = newnode;
+        }
+    }
+
+    // insert before given element "ele"
+    void insert_at_pos(int value, int ele) {
+        node* newnode = new node(value);
+
+        // if list is empty
+        if (head == nullptr) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        // if element is at head
+        if (head->data == ele) {
+            newnode->next = head;
+            head = newnode;
+            return;
+        }
+
+        // traverse to find element
+        node* prev = head;
+        node* curr = head->next;
+        while (curr) {
+            if (curr->data == ele) {
+                prev->next = newnode;
+                newnode->next = curr;
+                return;
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+
+        // if element not found
+        cout << "Element " << ele << " not found\n";
+    }
+
+    void display() {
+        node* t1 = head;
+        while (t1) {
+            cout << t1->data << "  ";
+            t1 = t1->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    linklist l;
+    l.insert_at_end(1);
+    l.insert_at_end(2);
+    l.insert_at_end(3);
+    l.display();            // 1 2 3
+    l.insert_at_begin(5);
+    l.display();            // 5 1 2 3
+    l.insert_at_pos(88, 1); // insert 88 before 1
+    l.display();            // 5 88 1 2 3
+    l.insert_at_pos(99, 10); // not found
     return 0;
 }
