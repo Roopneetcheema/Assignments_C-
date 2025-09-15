@@ -10,7 +10,6 @@ new Node 35 before/after the Node 30').
 (g) Search for a node and display its position from head.
 (h) Display all the node values.
 
-
 #include <iostream>
 using namespace std;
 
@@ -18,7 +17,7 @@ class node {
 public:
     int data;
     node* next;
-    node(int val = 0) {  // single constructor with default value
+    node(int val = 0) { 
         data = val;
         next = nullptr;
     }
@@ -38,6 +37,16 @@ public:
             head = newnode;
         }
     }
+    void del_at_begin() {
+    if (head == nullptr) {
+        cout << "List is already empty" << endl;
+    }
+    else {
+        node* delnode = head;
+        head = head->next;
+        delete delnode;  
+    }
+}
 
     void insert_at_end(int value) {
         node* newnode = new node(value);
@@ -48,7 +57,26 @@ public:
             temp = newnode;
         }
     }
-
+    void del_at_end()
+    {
+    if (head == NULL) {
+        cout << "Linked list is empty.\n";
+    }
+    else
+    {
+        node* temp = head;
+        node* prev = NULL;
+        while (temp->next != NULL) {
+            prev = temp;
+            temp = temp->next;
+        }
+        if (temp==head)
+        head=NULL;
+        else
+        prev->next = NULL;
+        delete temp;
+    }
+    }
     // insert before given element "ele"
     void insert_at_pos(int value, int ele) {
         node* newnode = new node(value);
@@ -82,6 +110,33 @@ public:
         // if element not found
         cout << "Element " << ele << " not found\n";
     }
+    void del_at_pos(int value) {
+    if (head == NULL) {
+        cout << "List is Empty." <<endl;
+        return;}
+    node* temp = head;
+    node* prev = NULL;
+    //Traverse to find a value
+    while (temp != NULL && temp->data != value) {
+
+        prev = temp;
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        cout << "Element not found.";
+        return;}
+    if (temp == head) {
+        head = head->next;
+    }
+    else if (temp->next == NULL) {
+        prev->next = NULL;
+    }
+    else {
+        prev->next = temp->next;
+    }
+
+    delete temp;
+ }
 
     void display() {
         node* t1 = head;
@@ -104,5 +159,10 @@ int main() {
     l.insert_at_pos(88, 1); // insert 88 before 1
     l.display();            // 5 88 1 2 3
     l.insert_at_pos(99, 10); // not found
+    l.del_at_begin();
+    l.del_at_end();
+    l.display();
+    l.del_at_pos(1);
+    l.display();
     return 0;
 }
