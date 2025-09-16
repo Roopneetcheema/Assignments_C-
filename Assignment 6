@@ -1,0 +1,133 @@
+1. Develop a menu driven program for the following operations of on a Circular as well
+as a Doubly Linked List.
+(a) Insertion anywhere in the linked list (As a first node, as a last node, and
+after/before a specific node).
+(b) Deletion of a specific node, say 'Delete Node 60'. That mean the node to be
+deleted may appear as a head node, last node or a node in between.
+(c) Search for a node.
+--------------------------------------------------------DOUBLY LINKED LIST ------------------------------------------------------------
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+    Node(int c) {
+        data = c;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class dll{
+    Node* head=nullptr;
+    Node* temp=nullptr;
+    
+public:
+    void insert(int val){
+        Node* newnode= new Node(val);
+        if(head==nullptr){
+            head=newnode;
+            temp=newnode;
+            return;
+        }
+        else{
+            temp->next=newnode;
+            newnode->prev=temp;
+            temp=newnode;
+        }
+    
+    }
+    void insert_b(int val){
+        Node* newnode= new Node(val);
+        if(head==nullptr){
+            head=newnode;
+            temp=newnode;
+            return;
+        }
+        else{
+            newnode->next=head;
+            head->prev=newnode;
+            head=newnode;
+        }
+    
+    }
+    void insert_after(int val, int ele) {
+        Node* curr = head;
+        while (curr != nullptr && curr->data != ele) {
+            curr = curr->next;
+        }
+        if (curr == nullptr) {
+            cout << "Element " << ele << " not found!\n";
+            return;
+        }
+
+        Node* newnode = new Node(val);
+        newnode->next = curr->next;
+        if (curr->next != nullptr) {
+            curr->next->prev = newnode;
+        }
+        curr->next = newnode;
+        newnode->prev = curr;
+    }
+    void del_b() {
+    if (head == nullptr) {
+        cout << "List already empty " << endl;
+        return;
+    }
+    Node* del = head;
+    head = head->next;
+    if (head) {
+        head->prev = nullptr;
+    } else {
+        temp = nullptr;  // list became empty
+    }
+    delete del;
+}
+
+void del_e() {
+    if (head == nullptr) {
+        cout << "List already empty " << endl;
+        return;
+    }
+    if (head->next == nullptr) {  // only one element
+        delete head;
+        head = nullptr;
+        temp = nullptr;
+        return;
+    }
+    Node* del = temp;
+    temp = temp->prev;
+    temp->next = nullptr;
+    delete del;
+}
+
+    void display(){
+        Node* curr=head;
+        while(curr){
+            cout<<curr->data<<"  ";
+            curr=curr->next;
+        }
+        cout<<endl;
+    }
+};
+
+int main() {
+    
+    dll l;
+    l.insert(2);
+    l.insert(23);
+    l.insert(234);
+    l.insert(2345);
+    l.display();
+    l.insert_b(1);
+    l.display();
+    l.insert_after(66,23);
+    l.del_b();
+    l.display();
+    l.del_e();
+    l.display();
+    return 0;
+}
