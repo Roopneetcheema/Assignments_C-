@@ -193,3 +193,73 @@ int main() {
 
     return 0;
 }
+
+==============================================================================================================================
+
+void bubbleSort() {
+    if (!head) return;
+
+    bool swapped = true;
+    while (swapped) {
+        swapped = false;
+        Node* temp = head;
+
+        while (temp->next) {
+            if (temp->data > temp->next->data) {
+                // manual swap
+                int x = temp->data;
+                temp->data = temp->next->data;
+                temp->next->data = x;
+
+                swapped = true;
+            }
+            temp = temp->next;
+        }
+    }
+}
+===================================================================================================================
+bool isPresent(Node* head, int val) {
+    Node* temp = head;
+    while (temp) {
+        if (temp->data == val) return true;
+        temp = temp->next;
+    }
+    return false;
+}
+
+static LinkedList Union(LinkedList& l1, LinkedList& l2) {
+    LinkedList result;
+    Node* t1 = l1.head;
+
+    // Copy all elements of l1
+    while (t1) {
+        if (!isPresent(result.head, t1->data))
+            result.insert(t1->data);
+        t1 = t1->next;
+    }
+
+    // Copy unique elements of l2
+    Node* t2 = l2.head;
+    while (t2) {
+        if (!isPresent(result.head, t2->data))
+            result.insert(t2->data);
+        t2 = t2->next;
+    }
+
+    return result;
+}
+
+
+static LinkedList Intersection(LinkedList& l1, LinkedList& l2) {
+    LinkedList result;
+    Node* t1 = l1.head;
+
+    while (t1) {
+        if (isPresent(l2.head, t1->data) && !isPresent(result.head, t1->data)) {
+            result.insert(t1->data);
+        }
+        t1 = t1->next;
+    }
+
+    return result;
+}
