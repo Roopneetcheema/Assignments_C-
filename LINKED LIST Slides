@@ -1,0 +1,195 @@
+1 .  MERGING TWO LISTS
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class node {
+public:
+    int data;
+    node* next;
+    node(int value) {
+        data = value;
+        next = nullptr;
+    }
+};
+
+class list {
+public:
+    node* head = nullptr; // make public so merge can access
+
+    void insert(int val) {
+        node* newnode = new node(val);
+        if (head == nullptr) {
+            head = newnode;
+        }
+        else {
+            node* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newnode;
+        }
+    }
+
+    void display() {
+        node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << "  ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+/// ---------- 1. Brute Force ----------
+node* mergeBruteForce(node* l1, node* l2) {
+    vector<int> values;
+
+    while (l1) {
+        values.push_back(l1->data);
+        l1 = l1->next;
+    }
+    while (l2) {
+        values.push_back(l2->data);
+        l2 = l2->next;
+    }
+
+    sort(values.begin(), values.end());
+
+    if (values.empty()) return nullptr;
+
+    node* head = new node(values[0]);
+    node* temp = head;
+
+    for (size_t i = 1; i < values.size(); i++) {
+        temp->next = new node(values[i]);
+        temp = temp->next;
+    }
+    return head;
+}
+
+/// ---------- 2. Iterative Merge (new nodes) ----------
+node* mergeIterative(node* l1, node* l2) {
+    node dummy(0);
+    node* tail = &dummy;
+
+    while (l1 && l2) {
+        if (l1->data <= l2->data) {
+            tail->next = new node(l1->data);
+            l1 = l1->next;
+        } else {
+            tail->next = new node(l2->data);
+            l2 = l2->next;
+        }
+        tail = tail->next;
+    }
+
+    while (l1) {
+        tail->next = new node(l1->data);
+        l1 = l1->next;
+        tail = tail->next;
+    }
+    while (l2) {
+        tail->next = new node(l2->data);
+        l2 = l2->next;
+        tail = tail->next;
+    }
+
+    return dummy.next;
+}
+
+/// ---------- 3. Recursive Merge ----------
+node* mergeRecursive(node* l1, node* l2) {
+    if (!l1) return l2;
+    if (!l2) return l1;
+
+    node* result = nullptr;
+
+    if (l1->data <= l2->data) {
+        result = l1;
+        result->next = mergeRecursive(l1->next, l2);
+    } else {
+        result = l2;
+        result->next = mergeRecursive(l1, l2->next);
+    }
+    return result;
+}
+
+/// ---------- 4. In-place Merge ----------
+node* mergeInPlace(node* l1, node* l2) {
+    if (!l1) return l2;
+    if (!l2) return l1;
+
+    node* head = nullptr;
+    if (l1->data <= l2->data) {
+        head = l1;
+        l1 = l1->next;
+    } else {
+        head = l2;
+        l2 = l2->next;
+    }
+
+    node* tail = head;
+
+    while (l1 && l2) {
+        if (l1->data <= l2->data) {
+            tail->next = l1;
+            l1 = l1->next;
+        } else {
+            tail->next = l2;
+            l2 = l2->next;
+        }
+        tail = tail->next;
+    }
+
+    if (l1) tail->next = l1;
+    if (l2) tail->next = l2;
+
+    return head;
+}
+
+//// ---------------- Main ----------------
+int main() {
+    list l1, l2;
+    l1.insert(3);
+    l1.insert(7);
+    l1.insert(10);
+
+    l2.insert(1);
+    l2.insert(2);
+    l2.insert(5);
+    l2.insert(8);
+    l2.insert(10);
+
+    cout << "List 1: "; l1.display();
+    cout << "List 2: "; l2.display();
+
+    // Brute Force
+    node* bf = mergeBruteForce(l1.head, l2.head);
+    cout << "Brute Force: ";
+    for (node* t = bf; t; t = t->next) cout << t->data << " ";
+    cout << endl;
+
+    // Iterative Merge
+    node* it = mergeIterative(l1.head, l2.head);
+    cout << "Iterative Merge: ";
+    for (node* t = it; t; t = t->next) cout << t->data << " ";
+    cout << endl;
+
+    // Recursive Merge
+    node* rec = mergeRecursive(l1.head, l2.head);
+    cout << "Recursive Merge: ";
+    for (node* t = rec; t; t = t->next) cout << t->data << " ";
+    cout << endl;
+
+    // In-place Merge
+    node* inpl = mergeInPlace(l1.head, l2.head);
+    cout << "In-place Merge: ";
+    for (node* t = inpl; t; t = t->next) cout << t->data << " ";
+    cout << endl;
+
+    return 0;
+}
