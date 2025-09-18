@@ -16,6 +16,41 @@ void sel_sort(int* arr,int len){
     arr[pos]=temp;
     }
 }
+void sel_sort_both(int* arr, int len) {
+    for (int j = 0, k = len - 1; j < k; j++, k--) {
+        int pos = j, end = j;
+        int min = arr[j];
+        int max = arr[j];
+
+        // Find min and max in current range [j … k]
+        for (int i = j; i <= k; i++) {
+            if (arr[i] < min) {
+                min = arr[i];
+                pos = i;
+            }
+            if (arr[i] > max) {
+                max = arr[i];
+                end = i;
+            }
+        }
+
+        // Swap min with left boundary
+        int temp = arr[j];
+        arr[j] = arr[pos];
+        arr[pos] = temp;
+
+        // If max was at position j, after swap it's now at pos
+        if (end == j) {
+            end = pos;
+        }
+
+        // Swap max with right boundary
+        temp = arr[k];
+        arr[k] = arr[end];
+        arr[end] = temp;
+    }
+}
+
 void bub_sort(int* arr,int len){
     bool flag=true;
     for(int i=0;i<len-1;i++){
@@ -57,8 +92,8 @@ int main() {
     int arr2[]={2,4,6,7,9,10,12,13};
     int len= sizeof(arr)/sizeof(arr[0]);
     show(arr,len);
-    //sel_sort(arr,len);
-    ins_sort(arr2,len);
+    sel_sort(arr,len);
+    //ins_sort(arr2,len);
     show(arr2,len);
     ins_sort(arr,len);
     show(arr,len);
