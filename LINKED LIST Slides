@@ -263,3 +263,159 @@ static LinkedList Intersection(LinkedList& l1, LinkedList& l2) {
 
     return result;
 }
+------------------------------------------------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+class node {
+public:
+    int data;
+    node* next;
+    node(int val = 0) {
+        data = val;
+        next = nullptr;
+    }
+};
+
+class linklist {
+    node* head = nullptr;
+    node* temp = nullptr;
+
+public:
+    void insert_at_begin(int value) {
+        node* newnode = new node(value);
+        if (head == nullptr) {
+            head = temp = newnode;
+        } else {
+            newnode->next = head;
+            head = newnode;
+        }
+    }
+
+    void del_at_begin() {
+        if (head == nullptr) {
+            cout << "List is already empty" << endl;
+            return;
+        }
+        node* delnode = head;
+        head = head->next;
+        if (head == nullptr) temp = nullptr; // reset tail
+        delete delnode;
+    }
+
+    void insert_at_end(int value) {
+        node* newnode = new node(value);
+        if (head == nullptr) {
+            head = temp = newnode;
+        } else {
+            temp->next = newnode;
+            temp = newnode;
+        }
+    }
+
+    void del_at_end() {
+        if (head == nullptr) {
+            cout << "Linked list is empty.\n";
+            return;
+        }
+        if (head->next == nullptr) {
+            delete head;
+            head = temp = nullptr;
+            return;
+        }
+        node* prev = head;
+        node* curr = head->next;
+        while (curr->next != nullptr) {
+            prev = curr;
+            curr = curr->next;
+        }
+        prev->next = nullptr;
+        delete curr;
+        temp = prev; // update tail
+    }
+
+    void display() {
+        node* t1 = head;
+        while (t1) {
+            cout << t1->data << "  ";
+            t1 = t1->next;
+        }
+        cout << endl;
+    }
+    node* reverseKGroup(node* head, int k) {
+    if (!head || k == 1) return head;
+
+    // Step 1: check if there are at least k nodes
+    node* t = head;
+    int count = 0;
+    while (t && count < k) {
+        t = t->next;
+        count++;
+    }
+    if (count < k) return head;  // fewer than k nodes → don't reverse
+
+    // Step 2: reverse first k nodes
+    node* prev = nullptr;
+    node* curr = head;
+    node* next = nullptr;
+    count = 0;
+    while (curr && count < k) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+        count++;
+    }
+
+    // Step 3: connect with recursion
+    if (next != nullptr) {
+        head->next = reverseKGroup(next, k);
+    }
+
+    // prev is new head of reversed group
+    return prev;
+}
+
+void revk(int k) {
+    head = reverseKGroup(head, k);
+
+    // update tail (temp)
+    temp = head;
+    if (temp) {
+        while (temp->next) temp = temp->next;
+    }
+}
+
+    node* reverse(node* head){
+        if(head==nullptr || head->next==nullptr){
+            return head;
+        }
+        node *rev= reverse(head->next);
+        head->next->next= head;
+        head->next=nullptr;
+        return rev;
+    }
+    void reverse_list(){
+        head=reverse(head);
+        temp = head;
+        if (temp) {
+            while (temp->next) temp = temp->next;
+        }
+    }
+};
+
+int main() {
+    linklist l;
+    l.insert_at_begin(5);
+    l.insert_at_begin(2);
+    l.insert_at_begin(1);
+    l.insert_at_begin(6);
+    l.insert_at_begin(8);
+    l.insert_at_begin(4);
+    l.display();
+    //l.reverse_list();
+    l.revk(2);
+    l.display();         
+    return 0;
+}
