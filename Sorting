@@ -1,0 +1,67 @@
+#include <iostream>
+#include <climits>
+using namespace std;
+void sel_sort(int* arr,int len){
+    int pos=0;
+    for(int j=0;j<len-1;j++){
+        int min=INT_MAX;
+        for(int i=j;i<len;i++){
+           if(arr[i]<min){
+              min=arr[i];
+              pos=i;
+           }
+        }
+    int temp=arr[j];
+    arr[j]=arr[pos];
+    arr[pos]=temp;
+    }
+}
+void bub_sort(int* arr,int len){
+    bool flag=true;
+    for(int i=0;i<len-1;i++){
+        for(int j=0;j<len-i-1;j++){
+            
+            if(arr[j]>arr[j+1]){
+                flag=false;
+                int temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+           
+            }
+             if(flag){
+                break;
+        }
+    }
+}
+void ins_sort(int* arr,int len){
+    for(int i=0;i<=len-1;i++){
+        int j=i;
+        while(j>0 && arr[j-1]>arr[j]){
+            int temp=arr[j];
+            arr[j]=arr[j-1];
+            arr[j-1]=temp;
+            j--;
+        }
+    }    
+}
+
+void show(int* arr,int len){
+    for(int i=0;i<len;i++){
+        cout<<arr[i]<<" ";
+    }
+    cout<<endl;
+}
+int main() {
+    int arr[]={12,43,2,98,45,32,5,22};
+    int arr2[]={2,4,6,7,9,10,12,13};
+    int len= sizeof(arr)/sizeof(arr[0]);
+    show(arr,len);
+    //sel_sort(arr,len);
+    ins_sort(arr2,len);
+    show(arr2,len);
+    ins_sort(arr,len);
+    show(arr,len);
+ 
+    return 0;
+}
