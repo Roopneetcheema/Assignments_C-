@@ -492,6 +492,58 @@ int main() {
 assuming the matrix is represented using a triplet.
 
 
+(a) TRANSPOSE 
+
+#include <iostream>
+using namespace std;
+class sparse{
+    int arr[3][3];
+    int tr[3][3];
+    public:
+    void input(){
+        for(int i=0;i<3;i++){
+            cout<<"Enter row "<<i+1<<endl;
+            for(int j=0;j<3;j++){
+            cin>>arr[i][j];
+        }
+        cout<<endl;
+        }
+    }
+    void transpose() {
+    for (int i = 0; i < 3; i++) {
+        tr[i][0] = arr[i][1];   // new row  = old col
+        tr[i][1] = arr[i][0];   // new col  = old row
+        tr[i][2] = arr[i][2];   // value stays same
+    }
+
+    // print result
+    cout << "\nTranspose Triplet:\n";
+    for (int i = 0; i < 3; i++) {
+        cout << tr[i][0] << "  "
+             << tr[i][1] << "  "
+             << tr[i][2] << "\n";
+    }
+}
+
+    void show(){
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                cout<<arr[i][j]<<"  ";
+            }
+            cout<<endl;
+        }
+    }
+};
+int main() {
+    sparse s;
+    s.input();
+    s.show();
+    s.transpose();
+
+    return 0;
+}
+--------------------------------------------------------------------------------------------------------
+
 (b) Addition of two matrices.
 #include <iostream>
 #include <vector>
@@ -606,6 +658,35 @@ int main() {
 
     return 0;
 }
+-----------------------------------------------------------------------------
+(c) MULTIPLICATION
+
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> multiply(const vector<vector<int>>& A,
+                                 const vector<vector<int>>& B) {
+        if (A.empty() || B.empty()) return {};   // check for empty matrices
+
+        int rows = A.size();
+        int cols = B[0].size();
+        int common = A[0].size();               // same as B.size()
+
+        vector<vector<int>> res(rows, vector<int>(cols, 0));
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                for (int k = 0; k < common; k++) {
+                    res[r][c] += A[r][k] * B[k][c];
+                }
+            }
+        }
+        return res;
+    }
+};
+
 ====================================================================================================================
 ====================================================================================================================
 ADDITIONAL QUESTIONS
