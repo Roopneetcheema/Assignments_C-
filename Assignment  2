@@ -543,7 +543,132 @@ int main() {
     return 0;
 }
 --------------------------------------------------------------------------------------------------------
+(b) Addition of two matrices.
+#include <iostream>
+using namespace std;
 
+int create_sparse(int arr[5][4], int row, int col ,int spar[20][3]) {
+    int count = 0;
+    
+    // Count non-zero elements
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (arr[i][j] != 0) {
+                count++;
+            }
+        }
+    }
+    
+    
+    // First row: store metadata
+    spar[0][0] = row;
+    spar[0][1] = col;
+    spar[0][2] = count;
+    
+    int k = 1; // Index to insert in sparse matrix
+    
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (arr[i][j] != 0) {
+                spar[k][0] = i;
+                spar[k][1] = j;
+                spar[k][2] = arr[i][j];
+                k++;
+            }
+        }
+    }
+    
+    // Print sparse matrix
+    cout << "Sparse matrix representation:\n";
+    cout << "Row Col Value\n";
+    for (int i = 0; i <= count; i++) {
+        cout << spar[i][0] << "   " << spar[i][1] << "   " << spar[i][2] << "\n";
+    }
+    return count;
+}
+void add(int spar1[20][3], int spar2[20][3], int l1, int l2) {
+    int sum[40][3];  // big enough to hold all entries
+    int k = 1;       // sum index starting from 1 (0 is metadata)
+    int i = 1, j = 1;
+
+    // Metadata rows are at index 0
+    sum[0][0] = spar1[0][0];  // rows (assuming both same)
+    sum[0][1] = spar1[0][1];  // cols
+    // count will be updated later
+
+    while (i <= l1 && j <= l2) {
+        // Compare row and col to merge positions
+        if (spar1[i][0] == spar2[j][0] && spar1[i][1] == spar2[j][1]) {
+            sum[k][0] = spar1[i][0];
+            sum[k][1] = spar1[i][1];
+            sum[k][2] = spar1[i][2] + spar2[j][2];
+            k++; i++; j++;
+        }
+        else if (spar1[i][0] < spar2[j][0] || 
+                (spar1[i][0] == spar2[j][0] && spar1[i][1] < spar2[j][1])) {
+            sum[k][0] = spar1[i][0];
+            sum[k][1] = spar1[i][1];
+            sum[k][2] = spar1[i][2];
+            k++; i++;
+        }
+        else {
+            sum[k][0] = spar2[j][0];
+            sum[k][1] = spar2[j][1];
+            sum[k][2] = spar2[j][2];
+            k++; j++;
+        }
+    }
+
+    // Copy remaining elements of spar1
+    while (i <= l1) {
+        sum[k][0] = spar1[i][0];
+        sum[k][1] = spar1[i][1];
+        sum[k][2] = spar1[i][2];
+        k++; i++;
+    }
+    // Copy remaining elements of spar2
+    while (j <= l2) {
+        sum[k][0] = spar2[j][0];
+        sum[k][1] = spar2[j][1];
+        sum[k][2] = spar2[j][2];
+        k++; j++;
+    }
+
+    sum[0][2] = k - 1;  // number of non-zero elements in sum
+
+    cout << "\nSum matrix representation:\n";
+    cout << "Row Col Value\n";
+    for (int idx = 0; idx < k; idx++) {
+        cout << sum[idx][0] << "   " << sum[idx][1] << "   " << sum[idx][2] << "\n";
+    }
+}
+
+int main() {
+    int arr1[5][4] = {
+        {2, 3, 0, 0},
+        {0, 0, 0, 5},
+        {0, 0, 7, 0},
+        {1, 0, 0, 0},
+        {8, 0, 0, 0}
+    };
+    int arr2[5][4] = {
+        {7, 3, 0, 0},
+        {0, 0, 1, 0},
+        {1, 0, 7, 0},
+        {1, 0, 0, 0},
+        {0, 0, 0, 0}
+    };
+    int spar1[20][3];
+    int spar2[20][3];
+    int len1=create_sparse(arr1, 5, 4,spar1);
+    int len2=create_sparse(arr2, 5, 4,spar2);
+    
+    add(spar1,spar2,len1,len2);
+    
+    return 0;
+}
+
+--------------------------------------------------------------------------------------------------------
 (b) Addition of two matrices.
 #include <iostream>
 #include <vector>
