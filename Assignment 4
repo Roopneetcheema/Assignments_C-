@@ -59,6 +59,9 @@ else if(front==rear){
       }
       cout<<endl;
   }
+~Queue() {
+    delete[] q;
+}
 };
 int main() {
     queue q1(10);
@@ -150,6 +153,9 @@ class queue{
       }
       cout<<endl;
   }
+~Queue() {
+    delete[] q;
+}
 };
 int main() {
     queue q1(10);
