@@ -252,3 +252,77 @@ int main() {
     
     return 0;
 }
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+    Node(int value) {
+        data = value;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+
+void inorder(Node* root){
+    if(root != nullptr){
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+}
+
+Node* create(Node* root, int val){
+    if (root == nullptr) return new Node(val);
+
+    Node* curr = root;
+    Node* parent = nullptr;
+    while(curr != nullptr){
+        parent = curr;
+        if(val < curr->data){
+            curr = curr->left;
+        }
+        else if(val > curr->data){
+            curr = curr->right;
+        }
+        else {
+            return root;
+        }
+    }
+    if(val < parent->data){
+        parent->left = new Node(val);
+    }
+    else {
+        parent->right = new Node(val);
+    }
+    return root;
+}
+
+void deleteTree(Node* root){
+    if(root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    Node* root = nullptr;
+    root = create(root, 16);
+    root = create(root, 23);
+    root = create(root, 3);
+
+    cout << "Inorder traversal: ";
+    inorder(root);
+    cout << endl;
+
+   
+    deleteTree(root);
+
+    return 0;
+}
