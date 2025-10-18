@@ -525,3 +525,72 @@ int main() {
     else
         cout << "Not a BST\n";
 }
+=======================================================================================================================================================
+
+5. Write a non-recursive function to traverse a BST in in-order traversal using stack.
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+// BST Node structure
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+// Function to create a new Node
+Node* newNode(int data) {
+    Node* node = new Node;
+    node->data = data;
+    node->left = node->right = nullptr;
+    return node;
+}
+
+// Iterative In-order Traversal using Stack
+void inorderIterative(Node* root) {
+    stack<Node*> st;       // Stack to store nodes
+    Node* current = root;  // Start from root
+
+    cout << "In-order Traversal: ";
+    
+    while (current != nullptr || !st.empty()) {
+        // Go to the leftmost node
+        while (current != nullptr) {
+            st.push(current);
+            current = current->left;
+        }
+
+        // Process the node at the top of the stack
+        current = st.top();
+        st.pop();
+        cout << current->data << " ";  // Visit node
+
+        // Go to the right subtree
+        current = current->right;
+    }
+    cout << endl;
+}
+
+// Main function
+int main() {
+    /*
+            10
+           /  \
+          5    20
+         / \
+        3   7
+    */
+    Node* root = newNode(10);
+    root->left = newNode(5);
+    root->right = newNode(20);
+    root->left->left = newNode(3);
+    root->left->right = newNode(7);
+
+    inorderIterative(root);
+
+    return 0;
+}
+========================================================================================================================================================
+
