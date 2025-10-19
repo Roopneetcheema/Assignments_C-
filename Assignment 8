@@ -594,3 +594,181 @@ int main() {
 }
 ========================================================================================================================================================
 
+6. Given preorder and in-order traversals, write a program to construct the Binary Tree.
+
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+// Function to create a new node
+Node* newNode(int data) {
+    Node* node = new Node;
+    node->data = data;
+    node->left = node->right = nullptr;
+    return node;
+}
+
+// Function to find index of current root in inorder array
+int searchInorder(int inorder[], int start, int end, int value) {
+    for (int i = start; i <= end; i++) {
+        if (inorder[i] == value)
+            return i;
+    }
+    return -1; // should not happen if inputs are valid
+}
+
+// Function to build the tree from preorder and inorder
+Node* buildTree(int inorder[], int preorder[], int inStart, int inEnd, int& preIndex) {
+    // Base condition
+    if (inStart > inEnd)
+        return nullptr;
+
+    // Pick current node from preorder using preIndex
+    int curr = preorder[preIndex++];
+    Node* node = newNode(curr);
+
+    // If this node has no children (leaf node)
+    if (inStart == inEnd)
+        return node;
+
+    // Find the position of this node in inorder traversal
+    int inIndex = searchInorder(inorder, inStart, inEnd, curr);
+
+    // Build left and right subtrees
+    node->left = buildTree(inorder, preorder, inStart, inIndex - 1, preIndex);
+    node->right = buildTree(inorder, preorder, inIndex + 1, inEnd, preIndex);
+
+    return node;
+}
+
+// Inorder traversal (to verify)
+void printInorder(Node* root) {
+    if (root == nullptr) return;
+    printInorder(root->left);
+    cout << root->data << " ";
+    printInorder(root->right);
+}
+
+// Preorder traversal (to verify)
+void printPreorder(Node* root) {
+    if (root == nullptr) return;
+    cout << root->data << " ";
+    printPreorder(root->left);
+    printPreorder(root->right);
+}
+
+int main() {
+    int inorder[]  = {3, 5, 7, 10, 20};
+    int preorder[] = {10, 5, 3, 7, 20};
+    int n = 5;
+
+    int preIndex = 0;
+
+    Node* root = buildTree(inorder, preorder, 0, n - 1, preIndex);
+
+    cout << "Inorder Traversal of Constructed Tree: ";
+    printInorder(root);
+    cout << endl;
+
+    cout << "Preorder Traversal of Constructed Tree: ";
+    printPreorder(root);
+    cout << endl;
+
+    return 0;
+}
+================================================================================================================================
+
+7. Given in-order and post-order traversals, write a program to construct the Binary Tree.
+
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+// Function to create a new node
+Node* newNode(int data) {
+    Node* node = new Node;
+    node->data = data;
+    node->left = node->right = nullptr;
+    return node;
+}
+
+// Function to find index of current root in inorder array
+int searchInorder(int inorder[], int start, int end, int value) {
+    for (int i = start; i <= end; i++) {
+        if (inorder[i] == value)
+            return i;
+    }
+    return -1; // should not happen if inputs are valid
+}
+
+// Function to build the tree from postorder and inorder
+Node* buildTree(int inorder[], int postorder[], int inStart, int inEnd, int& postIndex) {
+    // Base condition
+    if (inStart > inEnd)
+        return nullptr;
+
+    // Pick current node from preorder using postIndex
+    int curr = postorder[postIndex--];
+    Node* node = newNode(curr);
+
+    // If this node has no children (leaf node)
+    if (inStart == inEnd)
+        return node;
+
+    // Find the position of this node in inorder traversal
+    int inIndex = searchInorder(inorder, inStart, inEnd, curr);
+
+    // Build left and right subtrees
+    node->right = buildTree(inorder, postorder, inIndex + 1, inEnd, postIndex);
+    node->left = buildTree(inorder, postorder, inStart, inIndex - 1, postIndex);
+
+    return node;
+}
+
+// Inorder traversal (to verify)
+void printInorder(Node* root) {
+    if (root == nullptr) return;
+    printInorder(root->left);
+    cout << root->data << " ";
+    printInorder(root->right);
+}
+
+// Postorder traversal (to verify)
+void printPostorder(Node* root) {
+    if (root == nullptr) return;
+    printPostorder(root->left);
+    printPostorder(root->right);
+    cout << root->data << " ";
+}
+
+int main() {
+    int inorder[]  = {3, 5, 7, 10, 20};
+    int postorder[] = {3,7,5,20,10};
+    int n = 5;
+
+    int postIndex = n-1;
+
+    Node* root = buildTree(inorder, postorder, 0, n - 1, postIndex);
+
+    cout << "Inorder Traversal of Constructed Tree: ";
+    printInorder(root);
+    cout << endl;
+
+    cout << "Postorder Traversal of Constructed Tree: ";
+    printPostorder(root);
+    cout << endl;
+
+    return 0;
+}
