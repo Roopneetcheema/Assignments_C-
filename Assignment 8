@@ -841,15 +841,13 @@ int main() {
 ================================================================================================================================
 
 6. Implement priority queues using heaps.
-
 #include <iostream>
 #include <vector>
 using namespace std;
 
 class PriorityQueue {
-    vector<int> heap; // our max-heap
-
-    // Helper function to maintain heap property (bottom-up)
+    vector<int> heap; 
+    
     void heapifyUp(int i) {
         while (i > 0) {
             int parent = (i - 1) / 2;
@@ -860,7 +858,6 @@ class PriorityQueue {
         }
     }
 
-    // Helper function to maintain heap property (top-down)
     void heapifyDown(int i) {
         int n = heap.size();
         while (true) {
@@ -879,13 +876,13 @@ class PriorityQueue {
     }
 
 public:
-    // Insert element into PQ
+  
     void push(int value) {
         heap.push_back(value);
         heapifyUp(heap.size() - 1);
     }
 
-    // Remove top element
+    
     void pop() {
         if (heap.empty()) return;
         heap[0] = heap.back();
@@ -893,7 +890,6 @@ public:
         heapifyDown(0);
     }
 
-    // Get top element
     int top() {
         if (heap.empty()) {
             cout << "Priority Queue is empty!\n";
@@ -905,7 +901,20 @@ public:
     bool empty() {
         return heap.empty();
     }
-
+    void increase_key(int x, int k){
+        int parent= ciel(x/2)-1;
+        if(heap[x]<k){
+                swap(heap[x], k);
+                while(parent>=0){
+                    if(k> heap[parent]){
+                        swap(heap[parent], k);
+                    }
+                    parent=(parent/2)-1;
+                }
+            }
+            
+        
+    }
     void display() {
         for (int x : heap) cout << x << " ";
         cout << endl;
@@ -920,20 +929,16 @@ int main() {
     pq.push(20);
     pq.push(50);
     pq.push(40);
-
-    cout << "Priority Queue elements (as heap): ";
+    pq.push(33);
+    cout << "Priority Queue: ";
     pq.display();
-
-    cout << "\nTop element: " << pq.top() << endl;
-
-    pq.pop();
-    cout << "After popping top, PQ: ";
+    cout << pq.top() << endl;
+   // pq.pop();
+   pq.increase_key(2, 60);
     pq.display();
-
-    pq.pop();
-    pq.pop();
-    cout << "After pop twice, PQ: ";
-    pq.display();
+   // pq.pop();
+   // pq.pop();
+   // pq.display();
 
     return 0;
 }
