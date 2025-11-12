@@ -16,7 +16,7 @@ class polygon{
         width=w;
         height=h;
     }
-    virtual void calculate_area()=0;
+    virtual void calculate_area(){}
 };
 class rectangle:public polygon{
     public:
@@ -44,4 +44,161 @@ int main() {
 }
 
 =============================================================================================================================================
+
+#include <iostream>
+using namespace std;
+
+class shape{
+    protected:
+    int width;
+    int height;
+    public:
+    shape(){
+        width=0;
+        height=0;
+    }
+    shape(int w,int h){
+        width=w;
+        height=h;
+    }
+    virtual void calculate_area(){
+        
+    }
+    virtual void display(){
+        
+    }
+};
+class rectangle:public shape{
+    public:
+    rectangle(int he,int wi):shape(he,wi){};
+    void calculate_area(){
+        cout<<"Area is "<<height*width<<endl;
+    }
+    void display(){
+        cout<<"This a rectangle"<<endl;
+    }
+};
+class triangle:public shape{
+    public:
+    triangle(int he,int wi):shape(he,wi){};
+    void calculate_area(){
+        cout<<"Area is "<<0.5*height*width<<endl;
+    }
+    void display(){
+        cout<<"This a triangle"<<endl;
+    }
+};
+class circle:public shape{
+    int rad;
+    public:
+    circle(int r){
+        rad=r;
+    };
+    void calculate_area(){
+        cout<<"Area is "<<(3.141592654)*rad*rad<<endl;
+    }
+    void display(){
+        cout<<"This a circle"<<endl;
+    }
+};
+int main() {
+    rectangle r(6,7);
+    shape *ptr=&r;
+    ptr->calculate_area();
+    triangle t(4,5);
+    ptr=&t;
+    ptr->calculate_area();
+    circle c(7);
+    ptr=&c;
+    ptr->calculate_area();
+    return 0;
+}
+
+==========================================================================================================================================================================================
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Abstract base class
+class Student {
+protected:
+    string name;
+    int rollNo;
+
+public:
+    // Constructor
+    Student(string n, int r) : name(n), rollNo(r) {}
+
+    // Pure virtual function → makes this class abstract
+    virtual void showDetails() = 0;
+
+    // Virtual destructor (important for proper cleanup)
+    virtual ~Student() {}
+};
+
+// Derived class: Engineering
+class Engineering : public Student {
+    string branch;
+public:
+    Engineering(string n, int r, string b)
+        : Student(n, r), branch(b) {}
+
+    void showDetails() override {
+        cout << "Engineering Student\n";
+        cout << "Name: " << name << "\nRoll No: " << rollNo
+             << "\nBranch: " << branch << "\n\n";
+    }
+};
+
+// Derived class: Medicine
+class Medicine : public Student {
+    string specialization;
+public:
+    Medicine(string n, int r, string s)
+        : Student(n, r), specialization(s) {}
+
+    void showDetails() override {
+        cout << "Medicine Student\n";
+        cout << "Name: " << name << "\nRoll No: " << rollNo
+             << "\nSpecialization: " << specialization << "\n\n";
+    }
+};
+
+// Derived class: Science
+class Science : public Student {
+    string major;
+public:
+    Science(string n, int r, string m)
+        : Student(n, r), major(m) {}
+
+    void showDetails() override {
+        cout << "Science Student\n";
+        cout << "Name: " << name << "\nRoll No: " << rollNo
+             << "\nMajor: " << major << "\n\n";
+    }
+};
+
+// Main function
+int main() {
+    // Create objects of derived classes
+    Engineering e1("Alice", 101, "Computer Engineering");
+    Medicine m1("Bob", 102, "Cardiology");
+    Science s1("Charlie", 103, "Physics");
+
+    // Array of base class pointers
+    Student* students[3];
+
+    // Assign derived objects to base class pointers
+    students[0] = &e1;
+    students[1] = &m1;
+    students[2] = &s1;
+
+    // Process them using polymorphism
+    for (int i = 0; i < 3; ++i) {
+        students[i]->showDetails();
+    }
+
+    return 0;
+}
 
