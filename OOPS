@@ -1,0 +1,47 @@
+ASSIGNMENT 6
+
+#include <iostream>
+using namespace std;
+
+class polygon{
+    protected:
+    int width;
+    int height;
+    public:
+    polygon(){
+        width=0;
+        height=0;
+    }
+    polygon(int w,int h){
+        width=w;
+        height=h;
+    }
+    virtual void calculate_area()=0;
+};
+class rectangle:public polygon{
+    public:
+    rectangle(int he,int wi):polygon(he,wi){};
+    void calculate_area(){
+        cout<<"Area is "<<height*width<<endl;
+    }
+};
+class triangle:public polygon{
+    public:
+    triangle(int he,int wi):polygon(he,wi){};
+    void calculate_area(){
+        cout<<"Area is "<<0.5*height*width<<endl;
+    }
+};
+
+int main() {
+    rectangle r(6,7);
+    polygon *ptr=&r;
+    ptr->calculate_area();
+    triangle t(4,5);
+    ptr=&t;
+    ptr->calculate_area();
+    return 0;
+}
+
+=============================================================================================================================================
+
