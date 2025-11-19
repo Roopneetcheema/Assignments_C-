@@ -422,4 +422,47 @@ int main() {
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-9.
+9.#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Cartesian {
+private:
+    float x, y;
+
+public:
+    Cartesian(float a = 0, float b = 0) {
+        x = a;
+        y = b;
+    }
+
+    void show() {
+        cout << "Cartesian Coordinates: (" << x << ", " << y << ")" << endl;
+    }
+};
+
+class Polar {
+private:
+    float r, theta;   // theta in radians
+
+public:
+    Polar(float radius = 0, float angle = 0) {
+        r = radius;
+        theta = angle;
+    }
+
+    // UDT (Polar) → UDT (Cartesian) conversion
+    operator Cartesian() {
+        float x = r * cos(theta); 
+        float y = r * sin(theta);
+        return Cartesian(x, y);
+    }
+};
+
+int main() {
+    Polar p(10, 5);        // r = 10, θ = 5 radians
+    Cartesian c = p;       // calls conversion operator
+    c.show();
+
+    return 0;
+}
