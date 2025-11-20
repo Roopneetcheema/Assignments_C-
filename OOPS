@@ -1,5 +1,308 @@
-ASSIGNMENT 6
+===============================================================================================================================================================================================================
+===============================================================================================================================================================================================================
+                                                                                        ASSIGNMENT 5
+===============================================================================================================================================================================================================
+===============================================================================================================================================================================================================
+1.
+#include <iostream>
+using namespace std;
 
+class Alpha {
+private:
+    int a;
+
+public:
+    Alpha(int x) : a(x) {
+        cout << "Alpha Constructor, a = " << a << endl;
+    }
+
+    ~Alpha() {
+        cout << "Alpha Destructor\n";
+    }
+};
+
+class Beta {
+private:
+    int b;
+
+public:
+    Beta(int y) : b(y) {
+        cout << "Beta Constructor, b = " << b << endl;
+    }
+
+    ~Beta() {
+        cout << "Beta Destructor\n";
+    }
+};
+
+class Gamma : public Alpha, public Beta {
+private:
+    int c;
+
+public:
+    Gamma(int x, int y, int z) : Alpha(x), Beta(y), c(z) {
+        cout << "Gamma Constructor, c = " << c << endl;
+    }
+
+    ~Gamma() {
+        cout << "Gamma Destructor\n";
+    }
+};
+
+int main() {
+    Gamma g(10, 20, 30);
+
+    return 0;
+}
+
+
+===============================================================================================================================================================================================================
+2.
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class X {
+protected:
+    char str1[50];
+
+public:
+    X(const char* s) {
+        strcpy(str1, s);
+        cout << "X Constructor Called\n";
+    }
+
+    void showX() {
+        cout << "String in X: " << str1 << endl;
+    }
+
+    ~X() {
+        cout << "X Destructor Called\n";
+    }
+};
+
+class Y {
+protected:
+    char str2[50];
+
+public:
+    Y(const char* s) {
+        strcpy(str2, s);
+        cout << "Y Constructor Called\n";
+    }
+
+    void showY() {
+        cout << "String in Y: " << str2 << endl;
+    }
+
+    ~Y() {
+        cout << "Y Destructor Called\n";
+    }
+};
+
+// Z inherits from X and Y
+class Z : public X, public Y {
+private:
+    char str3[100];
+
+public:
+    Z(const char* s1, const char* s2) : X(s1), Y(s2) {
+        strcpy(str3, str1);
+        strcat(str3, str2);
+        cout << "Z Constructor Called\n";
+    }
+
+    void showZ() {
+        cout << "Concatenated String in Z: " << str3 << endl;
+    }
+
+    ~Z() {
+        cout << "Z Destructor Called\n";
+    }
+};
+
+int main() {
+    Z obj("Hello ", "World!");
+
+    obj.showX();
+    obj.showY();
+    obj.showZ();
+
+    return 0;
+}
+
+
+===============================================================================================================================================================================================================
+
+3.
+#include <iostream>
+using namespace std;
+
+/*
+   Diamond Structure:
+          Base
+         /    \
+     (virtual) (virtual)
+       B1        B2
+         \      /
+           \   /
+             C
+*/
+
+class Base {
+protected:
+    int x;
+public:
+    Base() {
+        cout << "Enter value for Base: ";
+        cin >> x;
+    }
+    void showBase() {
+        cout << "Base = " << x << endl;
+    }
+};
+
+class B1 : virtual public Base {
+public:
+    B1() {
+        cout << "Constructor of B1\n";
+    }
+};
+
+class B2 : virtual public Base {
+public:
+    B2() {
+        cout << "Constructor of B2\n";
+    }
+};
+
+class C : public B1, public B2 {
+    int y;
+public:
+    C() {
+        cout << "Enter value for C: ";
+        cin >> y;
+    }
+    void show() {
+        showBase();   // Only one copy due to virtual inheritance
+        cout << "C = " << y << endl;
+    }
+};
+
+int main() {
+    C obj;
+    cout << "\nDisplaying values:\n";
+    obj.show();
+    return 0;
+}
+
+===============================================================================================================================================================================================================
+4.
+#include <iostream>
+#include <string>
+using namespace std;
+
+// -------------------------
+// Abstract Base Class
+// -------------------------
+class Student {
+protected:
+    string name;
+    int roll;
+
+public:
+    Student(string n, int r) : name(n), roll(r) {}
+
+    // Pure virtual function (makes class abstract)
+    virtual void display() = 0;
+
+    // Virtual destructor
+    virtual ~Student() {}
+};
+
+// -------------------------
+// Derived Class: Science
+// -------------------------
+class Science : public Student {
+private:
+    int practicalMarks;
+
+public:
+    Science(string n, int r, int pm) : Student(n, r), practicalMarks(pm) {}
+
+    void display() override {
+        cout << "Science Student\n";
+        cout << "Name: " << name << "\nRoll: " << roll 
+             << "\nPractical Marks: " << practicalMarks << "\n\n";
+    }
+};
+
+// -------------------------
+// Derived Class: Art
+// -------------------------
+class Art : public Student {
+private:
+    int drawingMarks;
+
+public:
+    Art(string n, int r, int dm) : Student(n, r), drawingMarks(dm) {}
+
+    void display() override {
+        cout << "Art Student\n";
+        cout << "Name: " << name << "\nRoll: " << roll 
+             << "\nDrawing Marks: " << drawingMarks << "\n\n";
+    }
+};
+
+// -------------------------
+// Derived Class: Commerce
+// -------------------------
+class Commerce : public Student {
+private:
+    int accountMarks;
+
+public:
+    Commerce(string n, int r, int am) : Student(n, r), accountMarks(am) {}
+
+    void display() override {
+        cout << "Commerce Student\n";
+        cout << "Name: " << name << "\nRoll: " << roll 
+             << "\nAccount Marks: " << accountMarks << "\n\n";
+    }
+};
+
+// -------------------------
+// Main Function
+// -------------------------
+int main() {
+
+    // Array of base class pointers
+    Student* s[3];
+
+    // Creating objects of derived classes
+    s[0] = new Science("Riya", 101, 85);
+    s[1] = new Art("Kabir", 102, 90);
+    s[2] = new Commerce("Aman", 103, 88);
+
+    // Processing using base class pointer array
+    for (int i = 0; i < 3; i++) {
+        s[i]->display();   // Polymorphism
+    }
+
+    // Freeing memory
+    for (int i = 0; i < 3; i++) {
+        delete s[i];
+    }
+
+    return 0;
+}
+
+===============================================================================================================================================================================================================
+===============================================================================================================================================================================================================
+                                                                                        ASSIGNMENT 6
+===============================================================================================================================================================================================================
+===============================================================================================================================================================================================================
+1.
 #include <iostream>
 using namespace std;
 
@@ -44,77 +347,137 @@ int main() {
 }
 
 =============================================================================================================================================
-
+2.
 #include <iostream>
 using namespace std;
 
-class shape{
-    protected:
+class shape {
+protected:
     int width;
     int height;
-    public:
-    shape(){
-        width=0;
-        height=0;
+
+public:
+    shape() : width(0), height(0) {}
+
+    shape(int w, int h) : width(w), height(h) {}
+
+    virtual void calculate_area() = 0;
+
+    virtual void display() {
+        cout << "This is a shape\n";
     }
-    shape(int w,int h){
-        width=w;
-        height=h;
+
+    virtual ~shape() {}   // Good practice
+};
+
+class rectangle : public shape {
+public:
+    rectangle(int w, int h) : shape(w, h) {}
+
+    void calculate_area() override {
+        cout << "Area of Rectangle = " << width * height << endl;
     }
-    virtual void calculate_area(){
-        
-    }
-    virtual void display(){
-        
+
+    void display() override {
+        cout << "This is a Rectangle\n";
     }
 };
-class rectangle:public shape{
-    public:
-    rectangle(int he,int wi):shape(he,wi){};
-    void calculate_area(){
-        cout<<"Area is "<<height*width<<endl;
+
+class triangle : public shape {
+public:
+    triangle(int w, int h) : shape(w, h) {}
+
+    void calculate_area() override {
+        cout << "Area of Triangle = " << 0.5 * width * height << endl;
     }
-    void display(){
-        cout<<"This a rectangle"<<endl;
-    }
-};
-class triangle:public shape{
-    public:
-    triangle(int he,int wi):shape(he,wi){};
-    void calculate_area(){
-        cout<<"Area is "<<0.5*height*width<<endl;
-    }
-    void display(){
-        cout<<"This a triangle"<<endl;
+
+    void display() override {
+        cout << "This is a Triangle\n";
     }
 };
-class circle:public shape{
+
+class circle : public shape {
     int rad;
-    public:
-    circle(int r){
-        rad=r;
-    };
-    void calculate_area(){
-        cout<<"Area is "<<(3.141592654)*rad*rad<<endl;
+public:
+    circle(int r) : shape(0,0), rad(r) {}
+
+    void calculate_area() override {
+        cout << "Area of Circle = " << 3.141592654 * rad * rad << endl;
     }
-    void display(){
-        cout<<"This a circle"<<endl;
+
+    void display() override {
+        cout << "This is a Circle\n";
     }
 };
+
 int main() {
-    rectangle r(6,7);
-    shape *ptr=&r;
+    rectangle r(6, 7);
+    shape* ptr = &r;
+    ptr->display();
     ptr->calculate_area();
-    triangle t(4,5);
-    ptr=&t;
+
+    triangle t(4, 5);
+    ptr = &t;
+    ptr->display();
     ptr->calculate_area();
+
     circle c(7);
-    ptr=&c;
+    ptr = &c;
+    ptr->display();
     ptr->calculate_area();
+
+    return 0;
+}
+
+
+
+==========================================================================================================================================================================================
+
+3.
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Overloaded functions
+
+// 1. Right-angled triangle: base & height
+float area(float base, float height) {
+    return 0.5f * base * height;
+}
+
+// 2. Equilateral triangle: only side needed
+float area(float side) {
+    return (sqrt(3) / 4) * side * side;
+}
+
+// 3. Isosceles triangle: two equal sides (a) and base (b)
+float area(float equalSide, float base, bool isIsosceles) {
+    // height = sqrt(a^2 - (b/2)^2)
+    float height = sqrt(equalSide * equalSide - (base * base) / 4.0f);
+    return 0.5f * base * height;
+}
+
+int main() {
+    float b, h, s, a;
+
+    cout << "Enter base & height for right-angled triangle: ";
+    cin >> b >> h;
+    cout << "Area = " << area(b, h) << endl;
+
+    cout << "Enter side for equilateral triangle: ";
+    cin >> s;
+    cout << "Area = " << area(s) << endl;
+
+    cout << "Enter equal side & base for isosceles triangle: ";
+    cin >> a >> b;
+    cout << "Area = " << area(a, b, true) << endl;
+
     return 0;
 }
 
 ==========================================================================================================================================================================================
+4.
 
 #include <iostream>
 #include <string>
@@ -369,6 +732,142 @@ int main() {
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+4.
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+class SafeArray {
+private:
+    int size;
+    int *arr;
+
+public:
+    SafeArray(int s) {
+        size = s;
+        arr = new int[size];
+    }
+
+    // Overloaded [] operator with bound checking
+    int& operator[](int index) {
+        if (index < 0 || index >= size) {
+            throw out_of_range("Index out of bounds!");
+        }
+        return arr[index];
+    }
+
+    ~SafeArray() {
+        delete[] arr;
+    }
+};
+
+int main() {
+    SafeArray A(5);
+
+    try {
+        A[0] = 10;
+        A[1] = 20;
+        cout << A[0] << endl;
+        cout << A[4] << endl;
+
+        // This will cause runtime error
+        cout << A[10] << endl;
+    }
+    catch (const exception &e) {
+        cout << "Error: " << e.what() << endl;
+    }
+
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5.
+#include <iostream>
+using namespace std;
+
+class Fun {
+public:
+
+    // () with no arguments
+    void operator()() {
+        cout << "Called with 0 arguments\n";
+    }
+
+    // () with one argument
+    void operator()(int a) {
+        cout << "Called with 1 argument: " << a << endl;
+    }
+
+    // () with two arguments
+    void operator()(int a, int b) {
+        cout << "Called with 2 arguments: " << a << ", " << b << endl;
+    }
+
+    // () with three arguments
+    void operator()(int a, int b, int c) {
+        cout << "Called with 3 arguments: " 
+             << a << ", " << b << ", " << c << endl;
+    }
+};
+
+int main() {
+    Fun obj;
+
+    obj();          // 0 arguments
+    obj(10);        // 1 argument
+    obj(10, 20);    // 2 arguments
+    obj(1, 2, 3);   // 3 arguments
+
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.
+#include <iostream>
+using namespace std;
+
+class Student {
+private:
+    string name;
+    int age;
+
+public:
+    // Friend functions for input/output operator overloading
+    friend istream& operator>>(istream &in, Student &s);
+    friend ostream& operator<<(ostream &out, const Student &s);
+};
+
+// Overload >> (input)
+istream& operator>>(istream &in, Student &s) {
+    cout << "Enter name: ";
+    in >> s.name;
+
+    cout << "Enter age: ";
+    in >> s.age;
+
+    return in;
+}
+
+// Overload << (output)
+ostream& operator<<(ostream &out, const Student &s) {
+    out << "Name: " << s.name << ", Age: " << s.age;
+    return out;
+}
+
+int main() {
+    Student s1;
+
+    // Using overloaded >>
+    cin >> s1;
+
+    // Using overloaded <<
+    cout << s1 << endl;
+
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 7. 
 
 #include <iostream>
@@ -422,7 +921,9 @@ int main() {
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-9.#include <iostream>
+9.
+
+#include <iostream>
 #include <cmath>
 using namespace std;
 
