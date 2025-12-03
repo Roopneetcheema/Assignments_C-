@@ -359,6 +359,60 @@ int main() {
 
     return 0;
 }
+==============================================================================================================================
+INSERT RECURSIVELYYY
+
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int key;
+    Node* left;
+    Node* right;
+    Node(int val) : key(val), left(nullptr), right(nullptr) {}
+};
+
+Node* TREE_INSERT_WITHOUT_PARENT(Node* root, Node* z) {
+    Node* x = root;
+    if (x == nullptr)
+        return z;
+    if (z->key < x->key)
+        x->left = TREE_INSERT_WITHOUT_PARENT(x->left, z);
+    else if (z->key > x->key)
+        x->right = TREE_INSERT_WITHOUT_PARENT(x->right, z);
+    return x;
+}
+
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    cout << root->key << " ";
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+
+    root = TREE_INSERT_WITHOUT_PARENT(root, new Node(50));
+    TREE_INSERT_WITHOUT_PARENT(root, new Node(30));
+    TREE_INSERT_WITHOUT_PARENT(root, new Node(20));
+    TREE_INSERT_WITHOUT_PARENT(root, new Node(40));
+    TREE_INSERT_WITHOUT_PARENT(root, new Node(70));
+    TREE_INSERT_WITHOUT_PARENT(root, new Node(60));
+    TREE_INSERT_WITHOUT_PARENT(root, new Node(80));
+
+    inorder(root);
+}
+
+--------------------------------------------------------------------------------------------------
+int getleafcount(Node* root){
+    if (root == nullptr)
+        return 0;
+    if(root->left==nullptr && root->right==nullptr){
+        return 1;
+    }
+    return getleafcount(root->right)+getleafcount(root->left);
+}
 --------------------------------------------------------------------------------------------------
 
 (c) Maximum depth of BST
@@ -403,14 +457,17 @@ int maxDepth(Node* root) {
     return 1 + max(maxDepth(root->left), maxDepth(root->right));
 }
 
-int minDepth(Node* root) {
+int mindepth(Node* root) {
     if (root == nullptr)
         return 0;
+    if (root->left == nullptr && root->right == nullptr)
+        return 1;
     if (root->left == nullptr)
-        return 1 + minDepth(root->right);
+        return 1 + mindepth(root->right);
     if (root->right == nullptr)
-        return 1 + minDepth(root->left);
-    return 1 + min(minDepth(root->left), minDepth(root->right));
+        return 1 + mindepth(root->left);
+
+    return 1 + min(mindepth(root->left), mindepth(root->right));
 }
 
 int main() {
