@@ -9,27 +9,39 @@ Write a program to implement the following graph algorithms:
 #include <vector>
 using namespace std;
 
+struct node {
+    int data;
+    node* next;
+    node(int v = 0) {
+        data = v;
+        next = nullptr;
+    }
+};
+
 class Graph {
 private:
     int no_of_vertices;
     bool isDirected;
-    vector<vector<int>> adjmat;  
+    vector<vector<int>> adjmat;
+    vector<node*> adjlist;
 
 public:
     Graph(int vertices, bool directed = false) {
         no_of_vertices = vertices;
         isDirected = directed;
         adjmat.resize(no_of_vertices, vector<int>(no_of_vertices, 0));
+        adjlist.resize(no_of_vertices, nullptr);
     }
 
     void addVertex() {
         no_of_vertices++;
 
         adjmat.push_back(vector<int>(no_of_vertices, 0));
-
         for (int i = 0; i < no_of_vertices - 1; i++) {
             adjmat[i].push_back(0);
         }
+
+        adjlist.push_back(nullptr);
 
         cout << "Vertex " << no_of_vertices - 1 << " added successfully!\n";
     }
@@ -40,9 +52,21 @@ public:
             return;
         }
 
+        // Update adjacency matrix
         adjmat[u][v] = 1;
         if (!isDirected)
             adjmat[v][u] = 1;
+
+        // Update adjacency list
+        node* newNode = new node(v);
+        newNode->next = adjlist[u];
+        adjlist[u] = newNode;
+
+        if (!isDirected) {
+            node* newNode2 = new node(u);
+            newNode2->next = adjlist[v];
+            adjlist[v] = newNode2;
+        }
 
         cout << "Edge added between " << u << " and " << v << endl;
     }
@@ -55,20 +79,36 @@ public:
             }
             cout << endl;
         }
+
+        cout << "\nAdjacency List:\n";
+        for (int i = 0; i < no_of_vertices; i++) {
+            cout << i << " -> ";
+            node* temp = adjlist[i];
+            while (temp != nullptr) {
+                cout << temp->data << " ";
+                temp = temp->next;
+            }
+            cout << endl;
+        }
     }
 };
 
 int main() {
-    Graph g(4, false); 
+    Graph g(4, false);   // undirected graph
+
     g.addEdge(1,2);
     g.addEdge(3,2);
+
     g.display();
+
     g.addVertex();
     g.addEdge(4,1);
+
     g.display();
 
     return 0;
 }
+
 ================================================================================================================================================================
 1. Breadth First Search (BFS)
     #include <iostream>
@@ -109,6 +149,43 @@ int main() {
             cout << endl;
         }
     }
+    void bfs(int s) {
+        vector<string> color(no_of_vertices, "WHITE");
+        vector<int> dist(no_of_vertices, INT_MAX);
+        vector<int> parent(no_of_vertices, -1);
+
+        queue<int> Q;
+
+        color[s] = "GRAY";
+        dist[s] = 0;
+        parent[s] = -1;
+
+        Q.push(s);
+
+        cout << "\nBFS traversal starting from vertex " << s << ": ";
+
+        while (!Q.empty()) {
+            int u = Q.front();
+            Q.pop();
+            cout << u << " ";
+
+            node* temp = adjlist[u];
+            while (temp != nullptr) {
+                int v = temp->data;
+                if (color[v] == "WHITE") {
+                    color[v] = "GRAY";
+                    dist[v] = dist[u] + 1;
+                    parent[v] = u;
+                    Q.push(v);
+                }
+                temp = temp->next;
+            }
+            color[u] = "BLACK";
+        }
+        cout << endl;
+    }
+};
+
     void BFS(int start) {
         if (start < 0 || start >= no_of_vertices) {
             cout << "Invalid starting vertex!\n";
@@ -211,6 +288,45 @@ public:
         cout<<endl<<"DFS of given graph is "<<endl;
         dfs(start);
     }
+
+void DFS_slide() {
+        vector<string> color(no_of_vertices, "WHITE");
+        vector<int> parent(no_of_vertices, -1);
+        vector<int> d(no_of_vertices, 0);
+        vector<int> f(no_of_vertices, 0);
+        int time = 0;
+
+        cout << "\nDFS Traversal: ";
+        for (int u = 0; u < no_of_vertices; u++) {
+            if (color[u] == "WHITE")
+                DFS_Visit(u, color, parent, d, f, time);
+        }
+        cout << endl;
+    }
+
+    void DFS_Visit(int u, vector<string> &color, vector<int> &parent,
+                   vector<int> &d, vector<int> &f, int &time) {
+
+        time = time + 1;
+        d[u] = time;
+        color[u] = "GRAY";
+
+        cout << u << " ";
+
+        node* temp = adjlist[u];
+        while (temp != nullptr) {
+            int v = temp->data;
+            if (color[v] == "WHITE") {
+                parent[v] = u;
+                DFS_Visit(v, color, parent, d, f, time);
+            }
+            temp = temp->next;
+        }
+
+        color[u] = "BLACK";
+        time = time + 1;
+        f[u] = time;
+    }
 };
 
 int main() {
@@ -232,85 +348,128 @@ int main() {
 }
 
 =============================================================================================================================================================
-3. Minimum Spanning Tree (Kruskal and Prim)
+3. Minimum Spanning Tree ( Prim)
 
+#include <iostream>
+#include <vector>
+using namespace std;
 
+#define INF 999999
+
+void primMST(vector<vector<int>> &graph, int V) {
+    vector<int> key(V, INF);  
+    vector<bool> inMST(V, false); 
+    vector<int> parent(V, -1);   
+
+    key[0] = 0;  // Start from vertex 0
+
+    for (int count = 0; count < V - 1; count++) {
+        // Pick the minimum key value from vertices not yet in MST
+        int minKey = INF, u;
+        for (int v = 0; v < V; v++) {
+            if (!inMST[v] && key[v] < minKey) {
+                minKey = key[v];
+                u = v;
+            }
+        }
+
+        inMST[u] = true;  
+        for (int v = 0; v < V; v++) {
+            // graph[u][v] is weight of edge u-v
+            if (graph[u][v] && !inMST[v] && graph[u][v] < key[v]) {
+                key[v] = graph[u][v];
+                parent[v] = u;
+            }
+        }
+    }
+
+    // Print MST result
+    cout << "\nEdges in Minimum Spanning Tree (Prim's):\n";
+    for (int i = 1; i < V; i++) {
+        cout << parent[i] << " -- " << i << "  Weight: " << graph[i][parent[i]] << endl;
+    }
+}
+int main() {
+    int V = 5;
+    vector<vector<int>> graph = {
+        {0, 2, 0, 6, 0},
+        {2, 0, 3, 8, 5},
+        {0, 3, 0, 0, 7},
+        {6, 8, 0, 0, 9},
+        {0, 5, 7, 9, 0}
+    };
+
+    primMST(graph, V);
+    return 0;
+}
+
+===============================================================================================================================================================
 
 4. Dijkstra's Shortest Path Algorithm
 
 #include <iostream>
 #include <vector>
-#include <utility>   // for std::pair
-#include <limits>    // for std::numeric_limits
-
 using namespace std;
 
-const int INF = numeric_limits<int>::max();
+#define INF 999999
+
+void dijkstra(vector<vector<int>> &graph, int V, int src) {
+    vector<int> dist(V, INF);
+    vector<bool> visited(V, false);
+    vector<int> parent(V, -1);
+
+    dist[src] = 0;
+
+    // Dijkstra runs V-1 times
+    for (int count = 0; count < V - 1; count++) {
+
+        // Step 1: Pick minimum distance node NOT visited
+        int mindis = INF;
+        int min_node = -1;
+
+        for (int j = 0; j < V; j++) {
+            if (!visited[j] && dist[j] < mindis) {
+                mindis = dist[j];
+                min_node = j;
+            }
+        }
+
+        visited[min_node] = true;
+
+        // Step 2: Relax edges
+        for (int v = 0; v < V; v++) {
+            if (graph[min_node][v] != 0 && !visited[v] &&
+                dist[min_node] + graph[min_node][v] < dist[v]) {
+
+                dist[v] = dist[min_node] + graph[min_node][v];
+                parent[v] = min_node;
+            }
+        }
+    }
+
+    // Print results
+    cout << "\nShortest distances from source " << src << ":\n";
+    for (int i = 0; i < V; i++) {
+        cout << "Vertex " << i << " : Distance = " << dist[i];
+        if (parent[i] != -1) cout << " Parent = " << parent[i];
+        cout << endl;
+    }
+}
 
 int main() {
-    int n, m;
-    cout << "Enter number of nodes and edges: ";
-    cin >> n >> m;
+    int V = 5;
+    vector<vector<int>> graph = {
+        {0, 10, 0, 30, 100},
+        {10, 0, 50, 0, 0},
+        {0, 50, 0, 20, 10},
+        {30, 0, 20, 0, 60},
+        {100, 0, 10, 60, 0}
+    };
 
-    // adjacency list: adj[u] = vector of (neighbor, weight)
-    vector<vector<pair<int,int>>> adj(n);
-
-    cout << "Enter edges (u v w) with 0-based nodes:\n";
-    for (int i = 0; i < m; i++) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        // assuming 0-based input for u and v
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w}); // remove this line if graph is directed
-    }
-
-    int source;
-    cout << "Enter source vertex (0 to " << n-1 << "): ";
-    cin >> source;
-
-    vector<int> dist(n, INF);
-    vector<bool> visited(n, false);
-
-    dist[source] = 0;
-
-    // Dijkstra O(n^2) without heap
-    for (int i = 0; i < n; i++) {
-        // 1. Pick the unvisited node with minimum dist[]
-        int u = -1;
-        int minDist = INF;
-
-        for (int j = 0; j < n; j++) {
-            if (!visited[j] && dist[j] < minDist) {
-                minDist = dist[j];
-                u = j;
-            }
-        }
-
-        // No more reachable vertices
-        if (u == -1) break;
-
-        visited[u] = true;
-
-        // 2. Relax edges from u
-        for (auto edge : adj[u]) {
-            int v = edge.first;
-            int w = edge.second;
-
-            if (dist[u] != INF && dist[u] + w < dist[v]) {
-                dist[v] = dist[u] + w;
-            }
-        }
-    }
-
-    cout << "\nShortest distances from source " << source << ":\n";
-    for (int i = 0; i < n; i++) {
-        cout << "To " << i << ": ";
-        if (dist[i] == INF) cout << "INF\n";
-        else cout << dist[i] << "\n";
-    }
-
+    dijkstra(graph, V, 0);
     return 0;
 }
+
 
 ============================================================================================================================================================
 
